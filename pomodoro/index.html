@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f6f2" />
+    <meta name="description" content="A calm, focused Pomodoro timer for getting meaningful work done." />
+    <title>Pomodoro — Make room for focus</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Pomodoro home">
+          <span class="brand-mark" aria-hidden="true"><span></span></span>
+          <span>pomodoro<span class="brand-period">.</span></span>
+        </a>
+        <div class="topbar-right">
+          <div class="today-label"><span class="live-dot"></span><span id="today-label">Your focus space</span></div>
+          <button class="icon-button" id="sound-toggle" type="button" aria-label="Mute timer sounds" title="Sound on">
+            <svg class="sound-on-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+            <svg class="sound-off-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 6m0-6-5 6"/></svg>
+          </button>
+          <button class="icon-button settings-button" id="open-settings" type="button" aria-label="Open timer settings" title="Settings">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Z"/><path d="m19.4 15 .05.05a1.7 1.7 0 1 1-2.4 2.4L17 17.4a1.7 1.7 0 0 0-2.9 1.2v.15a1.7 1.7 0 1 1-3.4 0v-.08a1.7 1.7 0 0 0-2.9-1.2l-.05.05a1.7 1.7 0 1 1-2.4-2.4l.05-.05a1.7 1.7 0 0 0-1.2-2.9H4a1.7 1.7 0 1 1 0-3.4h.08a1.7 1.7 0 0 0 1.2-2.9l-.05-.05a1.7 1.7 0 1 1 2.4-2.4l.05.05a1.7 1.7 0 0 0 2.9-1.2V4a1.7 1.7 0 1 1 3.4 0v.08a1.7 1.7 0 0 0 2.9 1.2l.05-.05a1.7 1.7 0 1 1 2.4 2.4l-.05.05a1.7 1.7 0 0 0 1.2 2.9H20a1.7 1.7 0 1 1 0 3.4h-.08a1.7 1.7 0 0 0-.52 1.07Z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="welcome-row" aria-labelledby="welcome-title">
+          <div>
+            <p class="eyebrow">A LITTLE PROGRESS, EVERY DAY</p>
+            <h1 id="welcome-title">Make room for <span>focus.</span></h1>
+            <p class="welcome-copy">One thing at a time. You’ve got this.</p>
+          </div>
+          <div class="daily-summary" aria-label="Today's focus summary">
+            <div class="summary-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5v3M12 17.5v3M3.5 12h3m11 0h3M6 6l2.1 2.1m7.8 7.8L18 18m0-12-2.1 2.1m-7.8 7.8L6 18"/><circle cx="12" cy="12" r="4.5"/></svg></div>
+            <div><span class="summary-caption">TODAY'S FOCUS</span><strong><span id="focus-minutes">0</span><small> min</small></strong></div>
+          </div>
+        </section>
+
+        <section class="dashboard" aria-label="Pomodoro timer and tasks">
+          <article class="timer-card">
+            <div class="timer-card-top">
+              <div class="session-label"><span class="session-dot" id="session-dot"></span><span id="session-label">FOCUS SESSION</span></div>
+              <div class="cycle-count" aria-label="Completed focus sessions"><span id="cycle-count">0</span><span> sessions</span></div>
+            </div>
+
+            <div class="mode-switch" role="group" aria-label="Timer mode">
+              <button class="mode-button is-active" data-mode="focus" type="button" aria-pressed="true">Focus</button>
+              <button class="mode-button" data-mode="short" type="button" aria-pressed="false">Short break</button>
+              <button class="mode-button" data-mode="long" type="button" aria-pressed="false">Long break</button>
+            </div>
+
+            <div class="timer-wrap" aria-live="off">
+              <svg class="timer-ring" viewBox="0 0 280 280" aria-hidden="true">
+                <circle class="ring-track" cx="140" cy="140" r="128" />
+                <circle class="ring-progress" id="ring-progress" cx="140" cy="140" r="128" />
+              </svg>
+              <div class="timer-face">
+                <span class="timer-overline" id="timer-overline">TIME TO FOCUS</span>
+                <time class="timer-time" id="timer-time" datetime="PT25M">25:00</time>
+                <span class="timer-hint" id="timer-hint">A fresh start is one click away</span>
+              </div>
+            </div>
+
+            <div class="timer-actions">
+              <button class="primary-button" id="start-button" type="button">
+                <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 11 7-11 7V5Z"/></svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM15 5h3v14h-3z"/></svg>
+                <span>Start focus</span>
+              </button>
+              <button class="reset-button" id="reset-button" type="button" aria-label="Reset timer" title="Reset timer">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 11a8.5 8.5 0 1 1 2.3 5.8M3.5 5.5V11h5.5"/></svg>
+              </button>
+              <button class="reset-button skip-button" id="skip-button" type="button" aria-label="Skip to next mode" title="Skip to next mode">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 10 7-10 7V5ZM18 5v14"/></svg>
+              </button>
+            </div>
+            <p class="keyboard-hint">Press <kbd>space</kbd> to start or pause</p>
+          </article>
+
+          <aside class="side-column">
+            <article class="task-card">
+              <div class="card-heading">
+                <div><p class="eyebrow">STAY ON TRACK</p><h2>Your focus list</h2></div>
+                <span class="task-total" id="task-total">0</span>
+              </div>
+              <form class="task-form" id="task-form">
+                <label class="visually-hidden" for="task-input">Add a task to your focus list</label>
+                <input id="task-input" name="task" type="text" maxlength="90" placeholder="What are you working on?" autocomplete="off" />
+                <button type="submit" aria-label="Add task"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+              </form>
+              <ul class="task-list" id="task-list"></ul>
+              <p class="task-empty" id="task-empty">Add a task and give it your full attention.</p>
+              <div class="task-footer"><span class="focus-indicator"></span><span id="active-task-label">No task selected</span></div>
+            </article>
+
+            <article class="progress-card">
+              <div class="progress-heading"><div><p class="eyebrow">KEEP YOUR RHYTHM</p><h2>Today's progress</h2></div><span class="progress-spark" aria-hidden="true">✳</span></div>
+              <div class="progress-main"><strong id="progress-sessions">0</strong><span>of 4 sessions</span></div>
+              <div class="session-dots" id="session-dots" aria-label="Today's completed session progress"><span></span><span></span><span></span><span></span></div>
+              <p class="progress-note" id="progress-note">Your first focused session is waiting.</p>
+            </article>
+          </aside>
+        </section>
+
+        <footer class="page-footer"><span>Small steps add up.</span><span class="footer-separator">•</span><span>Take a breath between the big things.</span></footer>
+      </main>
+    </div>
+
+    <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+      <form id="settings-form" method="dialog">
+        <div class="dialog-heading"><div><p class="eyebrow">MAKE IT YOURS</p><h2 id="settings-title">Timer settings</h2></div><button class="icon-button close-dialog" type="button" id="close-settings" aria-label="Close settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+        <p class="settings-intro">Choose a rhythm that works for you. Times are in minutes.</p>
+        <div class="settings-grid">
+          <label>Focus session<input name="focus" type="number" min="1" max="90" required /></label>
+          <label>Short break<input name="short" type="number" min="1" max="30" required /></label>
+          <label>Long break<input name="long" type="number" min="1" max="60" required /></label>
+          <label>Long break after<input name="interval" type="number" min="2" max="8" required /></label>
+        </div>
+        <div class="dialog-actions"><button class="text-button" type="button" id="restore-defaults">Restore defaults</button><button class="primary-button save-settings" type="submit">Save settings</button></div>
+      </form>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <noscript><p class="noscript">This timer needs JavaScript enabled in your browser.</p></noscript>
+  </body>
+</html>
